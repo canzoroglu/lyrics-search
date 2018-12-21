@@ -1,10 +1,10 @@
 import React from "react"
-import Tracks from "./Tracks";
+import Result from "./Result";
 
 const Index = () => {
   return (
     <React.Fragment>
-      <Tracks />
+      <Result />
     </React.Fragment>
   );
 }

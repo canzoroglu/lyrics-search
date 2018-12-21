@@ -4,17 +4,27 @@ const Context = React.createContext();
 
 export class Provider extends Component {
   state = {
-    track_list: [],
-    heading: "Top 10 Results"
+    temps: [],
+    weatherState: ""
   }
   componentDidMount(){
-    fetch(`https://cors-anywhere.herokuapp.com/https://api.musixmatch.com/ws/1.1/chart.tracks.get?chart_name=top&
-      page=1&page_size=10&country=us&f_has_lyrics=1&apikey=af51884ebf5dbcb62e97871ae7b6b800`)
+    fetch(`https://cors-anywhere.herokuapp.com/https://www.metaweather.com/api/location/search/?query=london`)
       .then(function(response) {
         return response.json();
       })
       .then(function(myJson) {
-        console.log(JSON.stringify(myJson));
+        let woeid = myJson[0].woeid;
+        return fetch(`https://cors-anywhere.herokuapp.com/https://www.metaweather.com/api/location/${woeid}`)
+      })
+      .then(function(response){
+        return response.json()
+      })
+      .then((weatherData) => {
+        let consolidateWeather = weatherData.consolidated_weather[0];
+        this.setState({
+          temps: [consolidateWeather.min_temp, consolidateWeather.max_temp],
+          weatherState: consolidateWeather.weather_state_abbr
+        });
       });
   }
   render(){
